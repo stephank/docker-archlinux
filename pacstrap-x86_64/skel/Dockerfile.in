@@ -1,0 +1,18 @@
+# Image used to create a rootfs using a pacstrap-like process.
+FROM scratch
+ADD rootfs-%ARCH%.tar.gz /
+COPY prep-pacman.sh /
+
+ENV ARCH %ARCH%
+COPY mirrorlist /etc/pacman.d/mirrorlist
+RUN set -xe \
+ && mv /etc/pacman.conf /etc/pacman.conf.orig \
+ && perl -ne "s/Architecture = auto/Architecture = ${ARCH}/g; print;" < /etc/pacman.conf.orig > /etc/pacman.conf \
+ && pacman-key --init \
+ && pacman-key --populate archlinux \
+ && perl -ne 'gethostbyname($1) if /^Server = https?:\/\/(.+)\//' < /etc/pacman.d/mirrorlist \
+ && /prep-pacman.sh \
+ && pacman --noconfirm -Sy tar
+
+COPY docker-pacstrap.sh /
+ENTRYPOINT ["/docker-pacstrap.sh"]
