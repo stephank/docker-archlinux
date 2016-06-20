@@ -27,4 +27,4 @@ gpg --verify "${SIG_FILENAME}"
 
 # Repack the tarball to strip the first component
 tar -xpzf "${TAR_FILENAME}"
-tar -C "root.${ARCH}" -czf "/out/rootfs-${ARCH}.tar.gz" .
+tar -C "root.${ARCH}" -czf "/out/rootfs.tar.gz" .

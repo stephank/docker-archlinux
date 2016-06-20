@@ -26,7 +26,7 @@ gpg --keyserver "${GPG_KEYSERVER}" --recv-keys "${BOOTSTRAP_GPG_KEY}"
 gpg --verify "${SIG_FILENAME}"
 
 # Move the tarball in place.
-mv "${TAR_FILENAME}" "/out/rootfs-${ARCH}.tar.gz"
+mv "${TAR_FILENAME}" "/out/rootfs.tar.gz"
 
 # Grab a copy of qemu-arm-static from Debian.
 apt-get update -y

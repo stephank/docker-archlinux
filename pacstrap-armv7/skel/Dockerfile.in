@@ -1,6 +1,6 @@
 # Image used to create a rootfs using a pacstrap-like process.
 FROM scratch
-ADD rootfs-%ARCH%.tar.gz /
+ADD rootfs.tar.gz /
 COPY prep-pacman.sh /
 COPY qemu-arm-static /usr/bin
 
