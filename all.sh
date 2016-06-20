@@ -4,11 +4,14 @@
 set -xe
 cd "$( dirname "${BASH_SOURCE[0]}" )"
 
+# Architectures to build.
+ARCHS=${ARCHS-x86_64 i686 armv7}
+
 # Args check.
 [ $# -eq 1 ]
 
-# Architectures to build.
-ARCHS=${ARCHS-x86_64 i686 armv7}
+# Run a clean first.
+./clean.sh
 
 # Perform builds.
 for ARCH in ${ARCHS}; do
