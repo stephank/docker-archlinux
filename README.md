@@ -5,8 +5,8 @@ plain and no-thrills as possible, what you'd get from `pacstrap`.
 
 ## Tags
 
- - `latest`: Alias for `x86_64:latest`
- - `devel`: Alias for `x86_64:devel`
+ - `latest`: Alias for `x86_64-latest`
+ - `devel`: Alias for `x86_64-devel`
  - `x86_64-latest`: Installation of `base` for `x86_64`
  - `x86_64-devel`: Installation of `base base-devel` for `x86_64`
  - `i686-latest`: Installation of `base` for `i686`
