@@ -53,7 +53,11 @@ The ARM images contain QEMU static binaries for userland emulation on a x86_64
 host, so the images work on systems with binfmt setup in [Debian-style]. (This
 includes Docker for Mac and Docker for Windows.)
 
+The QEMU static binaries are extracted from the [qemu-user-static] package in
+Debian sid.
+
  [Debian-style]: https://wiki.debian.org/QemuUserEmulation
+ [qemu-user-static]: https://packages.debian.org/sid/qemu-user-static
 
 ## Building
 
