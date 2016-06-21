@@ -1,0 +1,4 @@
+KEYRING_NAME="archlinuxarm"
+KEYRING_URL="http://mirror.archlinuxarm.org/arm/core/archlinuxarm-keyring-20140119-1-any.pkg.tar.xz"
+KEYRING_SIGNING_KEY="68B3537F39A313B3E574D06777193F152BDBE6A6"
+GPG_KEYSERVER="ha.pool.sks-keyservers.net"

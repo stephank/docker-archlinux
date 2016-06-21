@@ -1,12 +1,13 @@
 #!/bin/bash
-# Clean build intermediates, including docker images.
-# The package cache is left intact.
+# Clean all docker images.
+# Usage: clean.sh <repo>
 set -xe
-cd "$( dirname "${BASH_SOURCE[0]}" )"
 
-IMAGES="$(docker images -q archlinux-pacstrap)"
-if [ ! -z "${IMAGES}" ]; then
-    docker rmi ${IMAGES}
-fi
+[ $# -eq 1 ]
+REPO=$1
 
-rm -fr pacstrap-*/_build-*
+OLD_BOOTSTRAPS="$(docker images -q archlinux-bootstrap)"
+[ -z "${OLD_BOOTSTRAPS}" ] || docker rmi ${OLD_BOOTSTRAPS}
+
+OLD_IMAGES="$(docker images -q ${REPO})"
+[ -z "${OLD_IMAGES}" ] || docker rmi ${OLD_IMAGES}
