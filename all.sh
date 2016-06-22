@@ -7,12 +7,12 @@ cd "$(dirname "$0")"
 # Architectures to build.
 ARCHS=${ARCHS-x86_64 i686 arm armv6 armv7 aarch64}
 
-# Args check.
+# Parse arguments.
 [ $# -eq 1 ]
 REPO=$1
 
 # Run a clean first.
-./clean.sh ${REPO}
+./clean.sh
 
 # Perform builds.
 for ARCH in ${ARCHS}; do

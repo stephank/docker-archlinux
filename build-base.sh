@@ -19,8 +19,7 @@ if [ -z "$(docker images -q archlinux-bootstrap:${BOOTSTRAP_VERSION})" ]; then
         -i buildpack-deps:sid /bootstrap-dir/builder.sh
 
     # Remove old bootstrap images.
-    OLD_BOOTSTRAPS="$(docker images -q archlinux-bootstrap)"
-    [ -z "${OLD_BOOTSTRAPS}" ] || docker rmi ${OLD_BOOTSTRAPS}
+    ./clean.sh
 
     # Create the new bootstrap image.
     docker build -t archlinux-bootstrap:${BOOTSTRAP_VERSION} bootstrap
