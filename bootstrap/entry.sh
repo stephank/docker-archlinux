@@ -35,7 +35,7 @@ pacman-key --populate "${KEYRING_NAME}"
 pacman --noconfirm -r /build \
     --logfile /tmp/pacman.log \
     --cachedir=/tmp/pacman-cache \
-    -Sy base
+    -Sy coreutils bash pacman
 
 # Copy pacman config.
 rm -r /build/etc/pacman*

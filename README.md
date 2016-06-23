@@ -5,7 +5,7 @@ This repository contains unofficial Docker images of [Arch Linux] and
 
 The images aim to be as plain and no-thrills as possible, what you'd get from
 `pacstrap`. This does not mean they are small, however. The `latest` image
-weights in at about 300 MB, which is 6 times `ubuntu:latest` at the time of
+weights in at about 100 MB, which is twice `ubuntu:latest` at the time of
 writing.
 
 However, these images can make very convenient prototype, test and build
@@ -23,19 +23,23 @@ build process is in the GitHub repo [stephank/docker-archlinux].
 
 Builds run daily on hardware sponsored by [Angry Bytes].
 
-Each architecture is built in 3 variants:
+Each architecture is built in 4 variants:
 
- - `latest`: An installation of `base`
- - `devel`: Derived from `latest`, an installation of `base base-devel`
- - `makepkg`: Derived from `devel`, an environment for building packages
+ - `latest`: Installation of `coreutils`, `bash` and `pacman`.
+
+ - `base`: Derived from `latest`, a full installation of `base`.
+
+ - `devel`: Derived from `base`, a full installation of `base base-devel`.
+
+ - `makepkg`: Derived from `devel`, an environment for building packages.
 
  [Angry Bytes]: https://angrybytes.com/
 
 ### Arch Linux tags
 
- - `latest`, `devel`, `makepkg` are aliases for the x86_64 builds
- - `x86_64-latest`, `x86_64-devel`, `x86_64-makepkg`
- - `i686-latest`, `i686-devel`, `i686-makepkg`
+ - `latest`, `base`, `devel`, `makepkg` (aliases for x86_64)
+ - `x86_64-latest`, `x86_64-base`, `x86_64-devel`, `x86_64-makepkg`
+ - `i686-latest`, `i686-base`, `i686-devel`, `i686-makepkg`
 
 When running the i686 images on a x86_64 host, note that the system still
 reports x86_64 (e.g. in `uname -m`), and tools attempting autodetection may
@@ -43,10 +47,10 @@ thus fail. (The default `pacman.conf` is setup correctly, however.)
 
 ### Arch Linux ARM tags
 
- - `arm-latest`, `arm-devel`, `arm-makepkg`
- - `armv6-latest`, `armv6-devel`, `armv6-makepkg`
- - `armv7-latest`, `armv7-devel`, `armv7-makepkg`
- - `aarch64-latest`, `aarch64-devel`, `aarch64-makepkg`
+ - `arm-latest`, `arm-base`, `arm-devel`, `arm-makepkg`
+ - `armv6-latest`, `armv6-base`, `armv6-devel`, `armv6-makepkg`
+ - `armv7-latest`, `armv7-base`, `armv7-devel`, `armv7-makepkg`
+ - `aarch64-latest`, `aarch64-base`, `aarch64-devel`, `aarch64-makepkg`
 
 The ARM images contain QEMU static binaries for userland emulation on a x86_64
 host, so the images work on systems with binfmt setup in [Debian-style]. (This
@@ -99,7 +103,7 @@ A clean, full build of all tags and push can be performed with:
 ```bash
 ./all.sh <repo>
 # e.g.: ./all.sh archlinux
-# Will build and push: archlinux:x86_64-latest, archlinux:x86_64-devel, etc.
+# Will build and push: archlinux:x86_64-latest, archlinux:x86_64-base, etc.
 ```
 
 ## Build process
@@ -124,7 +128,7 @@ during bootstrapping.
 
 Once we have the final image with an install of `base`, creating the other
 variants is simply a matter of adding layers. Sourcefiles for these steps are
-in the `devel` and `makepkg` directories.
+in the `base`, `devel` and `makepkg` directories.
 
 All steps in the build process are verified with GnuPG. (This includes the ARM
 builds, which have signature verification enabled, unlike regular Arch Linux

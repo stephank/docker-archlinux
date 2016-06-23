@@ -60,5 +60,6 @@ derive() {
 }
 
 # Build all derivatives.
-derive devel latest
+derive base latest
+derive devel base
 derive makepkg devel
