@@ -6,6 +6,8 @@ cd "$(dirname "$0")"
 
 # Architectures to build.
 ARCHS=${ARCHS-x86_64 i686 arm armv6 armv7 aarch64}
+# Variants to build.
+VARIANTS="latest devel"
 
 # Parse arguments.
 [ $# -eq 1 ]
@@ -16,18 +18,20 @@ REPO=$1
 
 # Perform builds.
 for ARCH in ${ARCHS}; do
-    ./build-base.sh ${ARCH} ${REPO}:${ARCH}-latest
-    ./build-devel.sh ${REPO}:${ARCH}-latest ${REPO}:${ARCH}-devel
+    ./build.sh ${REPO} ${ARCH}
 done
 # Aliases.
-docker tag ${REPO}:x86_64-latest ${REPO}:latest
-docker tag ${REPO}:x86_64-devel ${REPO}:devel
+for VARIANT in ${VARIANTS}; do
+    docker tag ${REPO}:x86_64-${VARIANT} ${REPO}:${VARIANT}
+done
 
 # Push images.
 for ARCH in ${ARCHS}; do
-    docker push ${REPO}:${ARCH}-latest
-    docker push ${REPO}:${ARCH}-devel
+    for VARIANT in ${VARIANTS}; do
+        docker push ${REPO}:${ARCH}-${VARIANT}
+    done
 done
 # Aliases.
-docker push ${REPO}:latest
-docker push ${REPO}:devel
+for VARIANT in ${VARIANTS}; do
+    docker push ${REPO}:${VARIANT}
+done

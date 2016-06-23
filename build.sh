@@ -1,13 +1,13 @@
 #!/bin/bash
-# Create a base image using a pacstrap-like process.
-# Usage: build-base.sh <architecture> <tag>
+# Create images for a specific archicture.
+# Usage: build.sh <repo> <architecture>
 set -xe
 cd "$(dirname "$0")"
 
 # Parse arguments.
 [ $# -eq 2 ]
-ARCH=$1
-TAG=$2
+REPO=$1
+ARCH=$2
 
 # Get the bootstrap image settings.
 source bootstrap/vars
@@ -34,7 +34,30 @@ docker run --rm \
     archlinux-bootstrap:${BOOTSTRAP_VERSION}
 
 # Create the new image.
-docker build -t ${TAG} target-${ARCH}
+docker build -t ${REPO}:${ARCH}-latest target-${ARCH}
 
 # Cleanup the rootfs tarball.
 rm target-${ARCH}/_rootfs.tar.gz
+
+# Function to build derivatives.
+derive() {
+    VARIANT=$1
+    BASE=$2
+
+    # Create temporary Dockerfile.
+    DOCKERFILE="$(cd ${VARIANT} && mktemp .Dockerfile-XXXXXX)"
+
+    # Render Dockerfile template.
+    sed -e "s|%BASE%|${REPO}:${ARCH}-${BASE}|g" \
+        < ${VARIANT}/Dockerfile.in > ${VARIANT}/${DOCKERFILE}
+
+    # Build the image.
+    docker build -t ${REPO}:${ARCH}-${VARIANT} \
+        -f ${VARIANT}/${DOCKERFILE} ${VARIANT}
+
+    # Clean up temporary Dockerfile.
+    rm ${VARIANT}/${DOCKERFILE}
+}
+
+# Build all derivatives.
+derive devel latest
