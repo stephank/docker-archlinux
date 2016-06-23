@@ -7,7 +7,7 @@ cd "$(dirname "$0")"
 # Architectures to build.
 ARCHS=${ARCHS-x86_64 i686 arm armv6 armv7 aarch64}
 # Variants to build.
-VARIANTS="latest devel"
+VARIANTS="latest base devel makepkg"
 
 # Parse arguments.
 [ $# -eq 1 ]
