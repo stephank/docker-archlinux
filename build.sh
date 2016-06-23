@@ -15,8 +15,9 @@ source bootstrap/vars
 # Create the bootstrap image if it does not exist.
 if [ -z "$(docker images -q archlinux-bootstrap:${BOOTSTRAP_VERSION})" ]; then
     # Build the bootstrap rootfs.
+    docker pull ${BOOTSTRAP_BUILD_IMAGE}
     docker run --rm -v "${PWD}"/bootstrap:/bootstrap-dir \
-        -i buildpack-deps:sid /bootstrap-dir/builder.sh
+        -i ${BOOTSTRAP_BUILD_IMAGE} /bootstrap-dir/builder.sh
 
     # Remove old bootstrap images.
     ./clean.sh
