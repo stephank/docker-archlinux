@@ -1,0 +1,9 @@
+FROM %BASE%
+RUN set -xe \
+ && useradd -m builduser \
+ && echo 'builduser ALL = NOPASSWD: /usr/bin/pacman' > /etc/sudoers.d/builduser-pacman
+
+COPY entry.sh /
+WORKDIR /build
+USER builduser
+ENTRYPOINT ["/entry.sh"]

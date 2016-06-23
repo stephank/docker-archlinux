@@ -61,3 +61,4 @@ derive() {
 
 # Build all derivatives.
 derive devel latest
+derive makepkg devel

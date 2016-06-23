@@ -23,31 +23,30 @@ build process is in the GitHub repo [stephank/docker-archlinux].
 
 Builds run daily on hardware sponsored by [Angry Bytes].
 
+Each architecture is built in 3 variants:
+
+ - `latest`: An installation of `base`
+ - `devel`: Derived from `latest`, an installation of `base base-devel`
+ - `makepkg`: Derived from `devel`, an environment for building packages
+
  [Angry Bytes]: https://angrybytes.com/
 
-### Arch Linux
+### Arch Linux tags
 
- - `latest`: Alias for `x86_64-latest`
- - `devel`: Alias for `x86_64-devel`
- - `x86_64-latest`: Install of `base` for `x86_64`
- - `x86_64-devel`: Install of `base base-devel` for `x86_64`
- - `i686-latest`: Install of `base` for `i686`
- - `i686-devel`: Install of `base base-devel` for `i686`
+ - `latest`, `devel`, `makepkg` are aliases for the x86_64 builds
+ - `x86_64-latest`, `x86_64-devel`, `x86_64-makepkg`
+ - `i686-latest`, `i686-devel`, `i686-makepkg`
 
 When running the i686 images on a x86_64 host, note that the system still
 reports x86_64 (e.g. in `uname -m`), and tools attempting autodetection may
 thus fail. (The default `pacman.conf` is setup correctly, however.)
 
-### Arch Linux ARM
+### Arch Linux ARM tags
 
- - `arm-latest`: Install of `base` for `arm`
- - `arm-devel`: Install of `base base-devel` for `arm`
- - `armv6-latest`: Install of `base` for `armv6`
- - `armv6-devel`: Install of `base base-devel` for `armv6`
- - `armv7-latest`: Install of `base` for `armv7`
- - `armv7-devel`: Install of `base base-devel` for `armv7`
- - `aarch64-latest`: Install of `base` for `aarch64`
- - `aarch64-devel`: Install of `base base-devel` for `aarch64`
+ - `arm-latest`, `arm-devel`, `arm-makepkg`
+ - `armv6-latest`, `armv6-devel`, `armv6-makepkg`
+ - `armv7-latest`, `armv7-devel`, `armv7-makepkg`
+ - `aarch64-latest`, `aarch64-devel`, `aarch64-makepkg`
 
 The ARM images contain QEMU static binaries for userland emulation on a x86_64
 host, so the images work on systems with binfmt setup in [Debian-style]. (This
@@ -59,30 +58,40 @@ Debian sid.
  [Debian-style]: https://wiki.debian.org/QemuUserEmulation
  [qemu-user-static]: https://packages.debian.org/sid/qemu-user-static
 
-## Building
+## Examples for using the image
+
+### Building packages
+
+In a directory with a PKGBUILD file, run:
+
+```bash
+docker run --rm -v "$PWD":/build stephank/archlinux:makepkg
+```
+
+The `makepkg` images expect the build directory to be mounted as `/build`. The
+actual `makepkg` tool is invoked as `makepkg --noconfirm -s`. Any additional
+arguments passed to the image are added after the default arguments.
+
+Before the build starts, PGP keys in the PKGBUILD `validpgpkeys` array are
+fetched from public keyservers, and the package database is refreshed.
+
+## Building the images
 
 Currently, an `x86_64` host with binfmt setup for QEMU userland emulation is
 required to build the images.
 
-Build the `base` image for a specific architecture with:
+Build all variants of the image for a specific architecture with:
 
 ```bash
-./build-base.sh <architecture> <tag>
-# e.g.: ./build-base.sh x86_64 archlinux:latest
+./build.sh <repo> <architecture>
+# e.g.: ./build.sh archlinux x86_64
 ```
 
-Build the `base base-devel` image for an architecture with:
+During the build, the Arch Linux bootstrap is cached. A script is provided to
+clean these intermediate images:
 
 ```bash
-./build-devel.sh <base tag> <devel tag>
-# e.g.: ./build-devel.sh archlinux:latest archlinux:devel
-```
-
-A script is provided to clean all Docker images:
-
-```bash
-./clean.sh <repo>
-# e.g.: ./build-base.sh archlinux
+./clean.sh
 ```
 
 A clean, full build of all tags and push can be performed with:
@@ -113,9 +122,9 @@ the final image with the `base` group installed. The architecture-specific
 settings are in the `target-*` directories, which are shared with the container
 during bootstrapping.
 
-Once we have the final image with an install of `base`, creating images with
-`base-devel` installed is simply a matter of adding a layer. Sourcefiles for
-this step are in the `devel` directory.
+Once we have the final image with an install of `base`, creating the other
+variants is simply a matter of adding layers. Sourcefiles for these steps are
+in the `devel` and `makepkg` directories.
 
 All steps in the build process are verified with GnuPG. (This includes the ARM
 builds, which have signature verification enabled, unlike regular Arch Linux
