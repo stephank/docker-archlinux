@@ -62,7 +62,7 @@ Debian sid.
  [Debian-style]: https://wiki.debian.org/QemuUserEmulation
  [qemu-user-static]: https://packages.debian.org/sid/qemu-user-static
 
-## Examples for using the image
+## Examples
 
 ### Building packages
 
