@@ -2,7 +2,7 @@
 set -e
 
 # Additional settings.
-KEYSERVER="${KEYSERVER-ha.pool.sks-keyservers.net}"
+keyserver="${keyserver-ha.pool.sks-keyservers.net}"
 
 # Read the PKGBUILD.
 source PKGBUILD
@@ -10,7 +10,7 @@ source PKGBUILD
 # Fetch PGP keys used in the build.
 if (( ${#validpgpkeys[@]} > 0 )); then
     echo '==> Fetching PGP keys...'
-    gpg --keyserver "${KEYSERVER}" --recv-keys ${validpgpkeys[@]}
+    gpg --keyserver "${keyserver}" --recv-keys ${validpgpkeys[@]}
 fi
 
 # Update the package database if we need to install dependencies.

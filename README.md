@@ -82,7 +82,11 @@ fetched from public keyservers, and the package database is refreshed.
 ## Building the images
 
 Currently, an `x86_64` host with binfmt setup for QEMU userland emulation is
-required to build the images.
+required to build the images. In addition, the Docker host and client must
+share the filesystem for the source directory containing the build scripts.
+
+Note that building images launches a container with CAP_SYS_ADMIN, in order to
+mount aufs layers.
 
 Build all variants of the image for a specific architecture with:
 
@@ -91,14 +95,14 @@ Build all variants of the image for a specific architecture with:
 # e.g.: ./build.sh archlinux x86_64
 ```
 
-During the build, the Arch Linux bootstrap is cached. A script is provided to
-clean these intermediate images:
+During the build, the bootstrap environment and packages are cached. A script
+is provided to clean these intermediates:
 
 ```bash
 ./clean.sh
 ```
 
-A clean, full build of all tags and push can be performed with:
+A full build of all tags and push can be performed with:
 
 ```bash
 ./all.sh <repo>
@@ -109,26 +113,27 @@ A clean, full build of all tags and push can be performed with:
 ## Build process
 
 The build process creates an intermediate image based on the Arch Linux
-bootstrap tarball, but with slight modifications. This image is used to run the
-actual `pacman` command and create root filesystem tarballs for the final
-images.
+bootstrap tarball, but with slight modifications. This image is primarily used
+to run the actual `pacman` command.
 
 The bootstrap images are named `archlinux-bootstrap:<version>` and its rootfs
-is created by `bootstrap/buidler.sh`, which runs in an intermediate
+is created by `support/build-bootstrap.sh`, which runs in an intermediate
 `buildpack-deps:sid` container. The build process automatically cleans up old
 bootstrap versions.
 
-The entry point for the bootstrap image is `bootstrap/entry.sh`. This script
-performs steps similar to `pacstrap`, but calls `pacman` directly.
+To build layers for a specific architecture, the bootstrap image is started
+with the `support/bootstrap.sh` script. This script performs steps similar to
+`pacstrap`, but calls `pacman` directly.
 
-For each architecture, we run this image and script to thus create a rootfs for
-the final image with the `base` group installed. The architecture-specific
-settings are in the `target-*` directories, which are shared with the container
-during bootstrapping.
+For each layer to build, `pacman` is invoked and an additional aufs branch is
+added. For each of the branches, tarballs are placed in `target-*/_image`.
 
-Once we have the final image with an install of `base`, creating the other
-variants is simply a matter of adding layers. Sourcefiles for these steps are
-in the `base`, `devel` and `makepkg` directories.
+Once the tarballs are built, `build.sh` formats JSON files and runs
+`docker load` on the complete result.
+
+This process happens for each architecture, with specific settings in the
+`target-*` directories. Notably these are keyring settings in `vars`, and
+pacman configuration files.
 
 All steps in the build process are verified with GnuPG. (This includes the ARM
 builds, which have signature verification enabled, unlike regular Arch Linux

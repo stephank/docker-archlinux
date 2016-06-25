@@ -1,4 +1,0 @@
-FROM %BASE%
-RUN set -xe \
- && pacman --noconfirm -Sy --needed base-devel \
- && rm -r /var/lib/pacman/sync /var/cache/pacman/pkg

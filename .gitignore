@@ -1,2 +1,4 @@
 _rootfs.tar.gz
+_cache
+_image
 .Dockerfile-*
