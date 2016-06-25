@@ -85,8 +85,8 @@ Currently, an `x86_64` host with binfmt setup for QEMU userland emulation is
 required to build the images. In addition, the Docker host and client must
 share the filesystem for the source directory containing the build scripts.
 
-Note that building images launches a container with CAP_SYS_ADMIN, in order to
-mount aufs layers.
+Note that building images launches a privileged container, in order to mount
+aufs layers.
 
 Build all variants of the image for a specific architecture with:
 

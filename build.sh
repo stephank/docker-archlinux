@@ -37,8 +37,8 @@ scratch="$(docker volume create)"
 trap "docker volume rm ${scratch}" exit
 
 # Build the image layers.
-# We need CAP_SYS_ADMIN in order to create our own aufs mountpoint.
-docker run --rm --cap-add=SYS_ADMIN \
+# We need to be privileged in order to create our own aufs mountpoint.
+docker run --rm --privileged \
     -v ${scratch}:/build \
     -v "${PWD}"/target-${arch}:/target-dir \
     -i ${bootstrap_image} /bin/bash \

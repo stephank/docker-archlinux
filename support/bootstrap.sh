@@ -26,7 +26,7 @@ pacman-key --populate "${keyring_name}"
 # Mount the first layer.
 layer=1
 mkdir -p /build/root /build/L1
-mount -t aufs -o dio,xino=/dev/shm/aufs.xino,dirperm1,br:/build/L1=rw+wh none /build/root
+mount -t aufs -o dio,xino=/dev/shm/aufs.xino,br:/build/L1=rw+wh none /build/root
 cleanup() {
     umount /build/root
     rm -fr /build/L* /build/root /build/sync
