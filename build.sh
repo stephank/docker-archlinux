@@ -41,12 +41,14 @@ trap "docker volume rm ${scratch}" exit
 docker run --rm --privileged \
     -v ${scratch}:/build \
     -v "${PWD}"/target-${arch}:/target-dir \
-    -i ${bootstrap_image} /bin/bash < support/bootstrap.sh
+    -i ${bootstrap_image} /bin/bash \
+        < support/bootstrap.sh
 
 # Build the layer configs and manifests.
 docker run --rm \
     -v "${PWD}"/target-${arch}:/target-dir -w /target-dir \
-    -i ${bootstrap_image} /usr/bin/lua < support/build-config.lua
+    -i ${bootstrap_image} /usr/bin/lua - ${repo} ${arch} \
+        < support/build-config.lua
 
 # Fix permissions.
 docker run --rm \
