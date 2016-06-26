@@ -127,9 +127,13 @@ with the `support/bootstrap.sh` script. This script performs steps similar to
 
 For each layer to build, `pacman` is invoked and an additional aufs branch is
 added. For each of the branches, tarballs are placed in `target-*/_image`.
+Layer metadata is written to `target-*/_image/_meta.jsonl` as one JSON object
+per line.
 
-Once the tarballs are built, `build.sh` formats JSON files and runs
-`docker load` on the complete result.
+Once the tarballs are built, `support/build-config.lua` reads the metadata and
+builds the remaining image manifests and configs.
+
+Finally, a tar is created for each layer and fed directly into `docker load`.
 
 This process happens for each architecture, with specific settings in the
 `target-*` directories. Notably these are keyring settings in `vars`, and
