@@ -9,6 +9,9 @@ if #arg ~= 2 then
 end
 local repo, arch = unpack(arg)
 
+-- Format `created` timestamps.
+local creation_date = os.date("!%Y-%m-%dT%T.000000000Z")
+
 -- Build the base config.
 local manifest = {
     {
@@ -18,13 +21,14 @@ local manifest = {
     }
 }
 local config = {
+    created=creation_date,
     architecture='amd64',
     os='linux',
     config={
         User='root',
         Env={ 'PATH=/usr/local/sbin:/usr/local/bin:/usr/bin' },
-        WorkingDir='/',
-        Cmd='/bin/bash'
+        Cmd='/bin/bash',
+        WorkingDir='/'
     },
     rootfs={
         type='layers',
@@ -32,9 +36,6 @@ local config = {
     },
     history={}
 }
-
--- Format history `created` date.
-local creation_date = os.date("!%Y-%m-%dT%T.000000000Z")
 
 -- Iterate layers.
 local num = 0
