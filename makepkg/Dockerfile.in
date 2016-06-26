@@ -1,7 +1,11 @@
 FROM %parent_layer%
+
 RUN set -xe \
  && useradd -m builduser \
  && echo 'builduser ALL = NOPASSWD: /usr/bin/pacman' > /etc/sudoers.d/builduser-pacman
+
+RUN set -xe \
+ && echo -e '[makepkg]\nServer=file:///repo/\nSigLevel=Never' >> /etc/pacman.conf
 
 COPY entry.sh /
 WORKDIR /build

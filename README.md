@@ -79,6 +79,33 @@ arguments passed to the image are added after the default arguments.
 Before the build starts, PGP keys in the PKGBUILD `validpgpkeys` array are
 fetched from public keyservers, and the package database is refreshed.
 
+#### Adding a local repository
+
+The `makepkg` images have an additional repository configured:
+
+```
+[makepkg]
+Server=file:///repo/
+SigLevel=Never
+```
+
+When building packages that are interdependent, add them to a repo `makepkg`
+and mount it at `/repo` to allow them to build.
+
+Not creating this mount will result in a harmless error, that will not
+otherwise prevent packages from building.
+
+#### Creating a shared package cache
+
+Pacman downloads can be shared between different containers to save on
+bandwidth. Simple create a writable mount at `/var/cache/pacman/pkg`, for
+example:
+
+```bash
+docker volume create --name pacman-pkg
+docker run -v pacman-pkg:/var/cache/pacman/pkg ...
+```
+
 ## Building the images
 
 Currently, an `x86_64` host with binfmt setup for QEMU userland emulation is
