@@ -48,6 +48,15 @@ docker run --rm \
     -v "${PWD}"/target-${arch}:/target-dir -w /target-dir \
     -i ${bootstrap_image} /usr/bin/lua < support/build-config.lua
 
+# Fix permissions.
+docker run --rm \
+    -v "${PWD}"/target-${arch}:/target-dir -w /target-dir \
+    -i ${bootstrap_image} /usr/bin/bash -xe << EOF
+
+chown -R $(id -u):$(id -g) /target-dir
+
+EOF
+
 # Move to image directory
 pushd target-${arch}/_image
 
