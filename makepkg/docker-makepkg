@@ -1,4 +1,5 @@
 #!/bin/bash
+# Wrapper for makepkg that sets up the environment.
 set -e
 
 # Additional settings.
@@ -14,7 +15,11 @@ if (( ${#validpgpkeys[@]} > 0 )); then
 fi
 
 # Update the package database if we need to install dependencies.
+# Add the makepkg repository if present.
 if (( ${#depends[@]} > 0 || ${#makedepends[@]} > 0 )); then
+    if [ -f /repo/makepkg.db.tar.gz ]; then
+        sudo docker-enable-makepkg-repo
+    fi
     sudo pacman --noconfirm -Sy
 fi
 

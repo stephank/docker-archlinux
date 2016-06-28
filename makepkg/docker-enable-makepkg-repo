@@ -1,0 +1,13 @@
+#!/bin/bash
+# Helper that adds the makepkg repo to pacman.conf
+set -e
+
+if grep -qE '^[makepkg]' /etc/pacman.conf; then
+    exit 1
+fi
+
+cat >> /etc/pacman.conf << EOF
+[makepkg]
+Server=file:///repo/
+SigLevel=Never
+EOF

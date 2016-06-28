@@ -92,13 +92,21 @@ SigLevel=Never
 When building packages that are interdependent, add them to a repo `makepkg`
 and mount it at `/repo` to allow them to build.
 
-Not creating this mount will result in a harmless error, that will not
-otherwise prevent packages from building.
+```bash
+mkdir repo/
+cp mydep/mydep-1.0.0-1-x86_64.pkg.tar.xz repo/
+repo-add repo/makepkg.db.tar.gz repo/*.pkg.tar.xz
+
+docker run --rm \
+    -v "$PWD/repo":/repo:ro \
+    -v "$PWD/myproject":/build \
+    stephank/archlinux:makepkg
+```
 
 #### Creating a shared package cache
 
 Pacman downloads can be shared between different containers to save on
-bandwidth. Simple create a writable mount at `/var/cache/pacman/pkg`, for
+bandwidth. Simply create a writable mount at `/var/cache/pacman/pkg`, for
 example:
 
 ```bash
