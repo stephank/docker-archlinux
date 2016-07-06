@@ -86,8 +86,7 @@ ${build_pacman} -S coreutils bash pacman
 rm -r /build/root/etc/pacman*
 cp -a /etc/pacman* /build/root/etc
 # Push layer.
-# FIXME: remove lz4 once libarchive 3.2.1-2 is in core.
-pushLayer latest 'pacman -S coreutils bash pacman lz4'
+pushLayer latest 'pacman -S coreutils bash pacman'
 
 # Install the base group.
 ${build_pacman} -S --needed base
