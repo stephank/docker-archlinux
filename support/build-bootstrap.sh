@@ -4,6 +4,10 @@ set -xe
 
 source /bootstrap-dir/vars
 
+# Grab a copy of QEMU static binaries.
+apt-get update -y
+apt-get install -y gpg qemu-user-static
+
 # Determine URLs and filenames.
 remote_dir="https://mirrors.kernel.org/archlinux/iso/${bootstrap_version}"
 tar_filename="archlinux-bootstrap-${bootstrap_version}-x86_64.tar.gz"
@@ -18,10 +22,6 @@ gpg --keyserver "${gpg_keyserver}" --recv-keys "${bootstrap_signing_key}"
 
 # Download the bootstrap tarball.
 curl -SLO "${remote_dir}/${tar_filename}"
-
-# Grab a copy of QEMU static binaries.
-apt-get update -y
-apt-get install -y qemu-user-static
 
 # Verify the downloaded file.
 grep " ${tar_filename}\$" sha1sums.txt | sha1sum -c -
