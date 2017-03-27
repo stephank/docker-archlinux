@@ -1,4 +1,4 @@
 keyring_name="archlinux"
-keyring_url="https://mirrors.kernel.org/archlinux/core/os/i686/archlinux-keyring-20170104-1-any.pkg.tar.xz"
+keyring_url="https://mirrors.kernel.org/archlinux/core/os/i686/archlinux-keyring-20170320-1-any.pkg.tar.xz"
 keyring_signing_key="86CFFCA918CF3AF47147588051E8B148A9999C34"
 gpg_keyserver="ha.pool.sks-keyservers.net"
